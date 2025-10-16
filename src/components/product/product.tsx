@@ -1,21 +1,13 @@
-import {
-  Box,
-  Button,
-  Grid,
-  GridItem,
-  Image,
-  Skeleton,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IProduct } from "../../types";
-import { api } from "../../api/axios";
 import { urls } from "../../api/urls";
+import { api } from "../../api/axios";
+import { IProduct } from "../../types/types";
+import { SkeletonProduct } from "./skeleton";
 
-export function Product() {
+export function ProductComonent() {
   const [data, setData] = useState<IProduct[]>();
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,27 +15,7 @@ export function Product() {
   }, []);
 
   if (!data) {
-    return (
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))"
-        color="white"
-        gap="20px"
-        p="5px 15px"
-        justifyContent="space-between"
-      >
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-        <Skeleton h="300px"></Skeleton>
-      </Box>
-    );
+    return <SkeletonProduct />;
   }
 
   return (
@@ -63,6 +35,8 @@ export function Product() {
           <Button
             fontSize="14px"
             fontWeight="500"
+            whiteSpace="wrap"
+            textAlign="start"
             variant="link"
             my="5px"
             color="rgb(61, 153, 182)"
@@ -70,7 +44,7 @@ export function Product() {
               navigate(`/product/${el.title.split(" ").join("")}_${el.id}`)
             }
           >
-            {el.title}
+            {el.title.slice(0, 55)}
           </Button>
           <Text
             fontSize="14px"

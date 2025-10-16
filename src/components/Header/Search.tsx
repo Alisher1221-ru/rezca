@@ -1,8 +1,8 @@
-import { Box, Flex, Image, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/axios";
-import { urls } from "../api/urls";
+import { urls } from "../../api/urls";
+import { api } from "../../api/axios";
 
 interface TypeProduct {
   id: number;
@@ -16,6 +16,7 @@ export function Search() {
   const navigate = useNavigate();
   const [data, setData] = useState<TypeProduct[]>([]);
   const [search, setSearch] = useState<TypeProduct[]>([]);
+  const [isSearch, setIsSearch] = useState(false);
   const [input, setInput] = useState("");
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export function Search() {
 
   function handlerSearch(value: string) {
     setInput(value);
+    setIsSearch(true);
     setSearch(
       data.filter((el) => {
         return el.title
@@ -32,42 +34,63 @@ export function Search() {
           .includes(value.toLowerCase().trim());
       })
     );
+    if (!value) {
+      setSearch([]);
+      setIsSearch(false);
+    }
   }
 
   return (
     <Flex position="relative" w="100%" justifyContent="flex-end">
-      <Input
-        onChange={(e) => handlerSearch(e.target.value)}
-        _focus={{ maxW: { base: "100%", md: "100%" } }}
-        maxW="200px"
-        value={input}
-        placeholder="поиск..."
-        transition="all .3s linear"
-        variant="flushed"
-      />
+      <Box display="flex" w="full" gap="20px">
+        <Input
+          onChange={(e) => handlerSearch(e.target.value)}
+          maxW="100%"
+          p="0 10px"
+          value={input}
+          placeholder="поиск..."
+          transition="all .3s linear"
+          variant="flushed"
+        />
+        <Button
+          hidden={!isSearch}
+          variant="outline"
+          color="white"
+          onClick={() => [setIsSearch(false), setInput("")]}
+          _hover={{ background: "rgba(10,10,10,.5)" }}
+        >
+          X
+        </Button>
+      </Box>
       <Box
         position="absolute"
-        bottom="0"
+        bottom="-2px"
         right="0"
         w="100%"
-        bg="rgb(9,22,28)"
+        bg="rgba(0,0,0,.8)"
+        backdropFilter="blur(5px)"
         transform="translate(0, 100%)"
         transition="all .5s ease"
         overflow="auto"
-        h={search.length && input ? "fit-content" : "0px"}
+        zIndex="1"
+        h={isSearch && (search[0] || input) ? "88vh" : "0px"}
       >
         {search.map((el) => (
           <Flex
-            gap="10px"
             key={el.id}
+            gap="10px"
             as="button"
             borderBottom="1px solid gray"
-            p="5px"
+            p="8px"
             w="100%"
             textAlign="start"
             transition="all .2s"
-            _hover={{ bg: "rgb(40,40,40)" }}
-            onClick={() => [navigate(`/product/${el.id}`), setInput("")]}
+            _hover={{ bg: "rgba(10,50,100,.5)" }}
+            onClick={() => [
+              navigate(`/product/${el.title.split(" ").join("")}_${el.id}`),
+              setInput(""),
+              setIsSearch(false),
+            ]}
           >
             <Image
               src={el.image}
@@ -82,9 +105,14 @@ export function Search() {
               as="span"
               h="60px"
             >
-              <Text>{el.title}</Text>
-              <Text fontSize="13px" h="20px" maxW="500px" overflow="hidden">
-                {el.desc}
+              <Text fontSize={{ base: "14px", md: "16px" }}>{el.title}</Text>
+              <Text
+                fontSize={{ base: "12px", md: "14px" }}
+                color="gray.500"
+                display={{ base: "none", md: "inline-block" }}
+              >
+                {el.desc.slice(0, 90)}
+                {el.title.length > 90 && "..."}
               </Text>
             </Flex>
           </Flex>

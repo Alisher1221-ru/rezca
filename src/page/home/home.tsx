@@ -1,15 +1,13 @@
 import { Box, Text } from "@chakra-ui/react";
-import { Product } from "./product/product";
+import { ProductComonent } from "../../components/product/product";
 
-function Main() {
+export function HomePage() {
   return (
     <Box color="white" p="15px" minH="85vh">
       <Text p="20px 0" fontWeight="600" fontSize="30px">
         Лучшие Anime
       </Text>
-      <Product />
+      <ProductComonent />
     </Box>
   );
 }
-
-export default Main;

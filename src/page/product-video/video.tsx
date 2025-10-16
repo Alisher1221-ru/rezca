@@ -4,20 +4,21 @@ import { GoArrowLeft } from "react-icons/go";
 import { GoArrowRight } from "react-icons/go";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Player } from "video-react";
-import { IVideo } from "../../types";
+import "video-react/dist/video-react.css";
+import { IVideo } from "../../types/types";
+import { addStorage, getStorage } from "../../helpers/LocalStorage";
 import { api } from "../../api/axios";
 import { urls } from "../../api/urls";
-import "video-react/dist/video-react.css";
-import { addStorage, getStorage } from "../../helpers/LocalStorage";
 
-export function VideoSeries() {
+export function VideoPage() {
   const { videoId, id } = useParams();
   const [data, setData] = useState<IVideo[]>([]);
   const playerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
   setInterval(() => {
-    //@ts-ignore
+    //@ts-ignore/
     if (playerRef.current?.getState().player.currentTime) {
       addStorage(
         `time_${videoId}`,

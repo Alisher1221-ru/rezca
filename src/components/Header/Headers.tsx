@@ -1,9 +1,9 @@
 import { Box, Image, Text } from "@chakra-ui/react";
-import { Search } from "./Search";
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { IProduct } from "../types";
+import { IProduct } from "../../types/types";
+import { Search } from "./search";
 
 function Headers() {
   const baseUrl = import.meta.env.VITE_BASE_API;
@@ -48,7 +48,6 @@ function Headers() {
         color="white"
         display="flex"
         bg="rgb(34,45,50)"
-        p="5px 15px"
         alignItems="center"
         justifyContent="space-between"
         position="relative"
